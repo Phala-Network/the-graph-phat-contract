@@ -13,7 +13,7 @@ async function main() {
   ])
 
   console.log('Pushing a request...');
-  await consumer.connect(deployer).request("0x8221");
+  await consumer.connect(deployer).request("0x011c23b3aadaf3d4991f3abee262a34d18e9fdb5");
   console.log('Done');
 }
 

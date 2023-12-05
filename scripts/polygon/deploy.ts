@@ -19,9 +19,6 @@ async function main() {
     POLYGON_CONSUMER_CONTRACT_ADDRESS=${consumer.address}
   `
   console.log(`\n${finalMessage}\n`);
-
-  console.log('Sending a request...');
-  await consumer.connect(deployer).request("0x01c567");
   console.log('Done');
 }
 
