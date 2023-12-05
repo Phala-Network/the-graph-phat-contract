@@ -61,7 +61,7 @@ function fetchApiStats(apiUrl: string, apiKey: string, target: string): any {
     "User-Agent": "phat-contract"
   };
   const baseApiUrl = `${apiUrl}${apiKey}/`
-  const ensDomainSubgraph = `${baseApiUrl}subgraphs/id/EjtE3sBkYYAwr45BASiFp8cSZEvd1VHTzzYFvJwQUuJx`;
+  const ensDomainSubgraph = `https://api.thegraph.com/subgraphs/name/ensdomains/ens`;
   const eip721Subgraph = `${baseApiUrl}subgraphs/id/AVZ1dGwmRGKsbDAbwvxNmXzeEkD48voB3LfGqj5w7FUS`;
   const snapshotSubgraph = `${baseApiUrl}subgraphs/id/3Q4vnuSqemXnSNHoiLD7wdBbGCXszUYnUbTz191kDMNn`;
   const hasNfts = JSON.stringify({ query:`
