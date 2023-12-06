@@ -1,17 +1,18 @@
-# :hammer_and_pick: The Phat Contract Starter Kit
-> <u>**Note on Terminology**</u>
-> 
-> **Phat Contract** will also be referred to as the **Phala Oracle** in this `README`. 
+# The Graph Starter Kit
+![](./assets/The_Graph.png)
+
 ## :mag_right: Overview
-The Phat Contract Starter Kit is your one-stop solution to connect any API to your smart contract. It offers wide-ranging support for all EVM-compatible blockchains, including but not limited to Ethereum, Polygon, Arbitrum, Avalanche, Binance Smart Chain, Optimism, and zkSync.
+[The Graph](https://thegraph.com/) Starter Kit is your one-stop solution to connect any subgraph API from The Graph and return the data to your smart contract. Developers now have wide-ranging support for all EVM-compatible blockchains, including but not limited to Ethereum, Polygon, Arbitrum, Avalanche, Binance Smart Chain, Optimism, and zkSync. 
 
-![](./assets/case-self-owned-oracles.jpg)
+Below is the high level design of the Request-and-Response model between the Consumer Contract and Phala's Phat Contract x Subgraphs from The Graph.
 
-This starter kit empowers you to initiate the data request from the smart contract side. The request is then seamlessly sent to your script for processing. You have the liberty to call any APIs to fulfill the request and define the response data structure that will be replied to your smart contract.
+![](./assets/TheGraphFlow.jpg)
+
+This starter kit empowers you to initiate the data request from the smart contract side for data from subgraphs on The Graph. The request is then seamlessly sent to your script for processing. You have the liberty to call any subgraph APIs to fulfill the request and define the response data structure that will be replied to your smart contract.
 ## :runner: Quick Start
-To kickstart your journey with the Phat Contract Starter Kit, you have 2 options:
-1. Create a template from the [`phat-contract-starter-kit`](https://bit.ly/3PVlgHs) template repo. Click on the "**Use this template**" button in the top right corner of the webpage. Then skip the `npx @phala/fn@latest init example` step.
-  ![](./assets/UseThisTemplate.png)
+To kickstart your journey with The Graph Starter Kit, you have 2 options:
+1. Create a template from the [`the-graph-starter-kit`](https://bit.ly/3PVlgHs) template repo. Click on the "**Use this template**" button in the top right corner of the webpage. Then skip the `npx @phala/fn@latest init example` step.
+  ![](./assets/TheGraphStarterKit.png)
 2. Install the `@phala/fn` CLI tool. You can do this using your node package manager (`npm`) or use node package execute (`npx`). For the purpose of this tutorial, we will be using `npx`.
 
 (Option 2) Once you have the CLI tool installed, you can create your first Phala Oracle template with the following command.
@@ -22,13 +23,14 @@ npx @phala/fn@latest init example
 
 <center>:rotating_light: <u><b>Note</b></u> :rotating_light:</center> 
 
-> When selecting your template, elect `phat-contract-starter-kit`.
+> When selecting your template, elect `the-graph-starter-kit`.
 
 ```shell
 npx @phala/fn@latest init example
 ? Please select one of the templates for your "example" project: (Use arrow keys)
-❯ phat-contract-starter-kit. The Phat Contract Starter Kit 
-  lensapi-oracle-consumer-contract. Polygon Consumer Contract for LensAPI Oracle 
+  phat-contract-starter-kit. The Phat Contract Starter Kit 
+  lensapi-oracle-consumer-contract. Polygon Consumer Contract for LensAPI Oracle
+❯ the-graph-starter-kit. The Graph Starter Kit 
 ```
 
 :stop_sign: **Not so fast!** What is it exactly that we are building? :stop_sign:
@@ -42,84 +44,18 @@ npx @phala/fn@latest init example
 > In the context of the off-chain environment, on-chain Smart Contracts are inherently limited. Their functionality is confined to the information available to them within the on-chain ecosystem. This limitation underscores the critical need for a secure off-chain oracle, such as the Phat Contract. This oracle is capable of fetching and transforming data, thereby enhancing the intelligence and awareness of Smart Contracts about on-chain activities. This is a pivotal step towards bridging the gap between the on-chain and off-chain worlds, making Smart Contracts not just smart, but also informed.
 >
 
-After creating a Phala Oracle template, `cd` into the new project and install the package dependencies. You can do this with the following command:
+After creating The Graph template repo, `cd` into the new project and install the package dependencies. You can do this with the following command:
 ```bash
 npm install
 ```
-Now, build the default Phala Oracle function with this command:
+Now, build the default Phat Contract script with this command:
 ```bash
 npm run build-function
 ```
-To simulate the expected result locally, run the Phala Oracle function now with this command:
+To simulate the expected result locally, run the Phat Contract script now with this command:
 ```bash
-npm run run-function dist/index.js -- -a 0x0000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000043078303100000000000000000000000000000000000000000000000000000000 https://api-v2-mumbai-live.lens.dev/
+npm run run-function  -- -a 0x0000000000000000000000000000000000000000000000000000000000000001000000000000000000000000de1683287529b9b4c3132af8aad210644b259cfd '{"apiUrl": "https://gateway.thegraph.com/api/", "apiKey": "cd22a01e5b7f9828cddcb52caf03ee79"}'
 ```
->
-> **What are the ingredients for the `npx @phala/fn run` command?**
->
-> Our Phat Contract script, now fully constructed, is ready for a trial run. This simulation mirrors the live script's operation when deployed on the Phala Network.
->
-> The command's first parameter is a HexString, representing a tuple of types `[uintCoder, bytesCoder]`. This serves as the entry function. The second parameter is a `string`, embodying the configurable secrets fed into the main function.
->
-> The `Coders.decode` function deciphers these parameters, yielding the decoded `requestId` and `encodedReqStr`. These decoded elements then become the raw material for the rest of the custom logic within the script.
-> ```typescript 
-> export default function main(request: HexString, secrets: string): HexString {
->   console.log(`handle req: ${request}`);
->   let requestId, encodedReqStr;
->   try {
->     [requestId, encodedReqStr] = Coders.decode([uintCoder, bytesCoder], request);
->   } catch (error) {
->     console.info("Malformed request received");
->   }
-> // ...
-> } 
-
-<details>
-  <summary><u>How the query looks under the hood</u></summary>
-
-- HTTP Endpoint: https://api-v2-mumbai-live.lens.dev/
-- Profile ID: `0x01`
-- Expected Graphql Query:
-  ```graphql
-  query Profile {
-    profile(request: { forProfileId: "0x01" }) {
-      stats {
-          followers
-          following
-          comments
-          countOpenActions
-          posts
-          quotes
-          mirrors
-          publications
-          reacted
-          reactions
-      }
-    }
-  }
-  ```
-- Expected Output:
-  ```json
-  {
-    "data": {
-      "profile": {
-        "stats": {
-          "followers": 2,
-          "following": 0,
-          "comments": 0,
-          "countOpenActions": 1,
-          "posts": 14,
-          "quotes": 0,
-          "mirrors": 0,
-          "publications": 14,
-          "reacted": 0,
-          "reactions": 0
-        }
-      }
-    }
-  }
-  ```
-</details>
 
 Finally, run the local end-to-end tests with this command. Here we will simulate locally the interaction between the Phat Contract and the Consumer Contract with hardhat.
 ```bash
@@ -163,7 +99,7 @@ You could use the Oracle to:
 - **[`phat_js` Docs](https://bit.ly/phat_js)**
 - **Frontend Templates**
   - **[Scaffold ETH2](https://bit.ly/45ekZnt)**
-    - **[Phat Scaffold ETH2](https://bit.ly/46zZ23j)**
+    - **[Phat Scaffold ETH2](https://github.com/HashWarlock/subgraph-phat-contract)**
   - **[Create ETH App](https://bit.ly/468I105)**
   - **[Nexth Starter Kit](https://bit.ly/3EVS0di)**
 - **[Technical Design Doc](https://bit.ly/3ZAzdxE)**
