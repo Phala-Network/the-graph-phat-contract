@@ -56,7 +56,7 @@
   "dependencies": {
     "@openzeppelin/contracts": "4.9.3",
     "@phala/fn": "~0.2",
-    "@phala/solidity": "^0.0.3",
+    "@phala/solidity": "^0.0.4",
     "dedent": "^1.5.1",
     "dotenv": "^16.0.3",
     "viem": "^1.19.3"
