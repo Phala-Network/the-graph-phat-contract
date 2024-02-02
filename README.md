@@ -16,7 +16,6 @@ Install the `@phala/fn` CLI tool. You can do this using your node package manage
 
 Once you have the CLI tool installed, you can create your first Phala Oracle template with the following command.
 ```bash
-# Skip this step if chose option 1 or cloned this repo
 npx @phala/fn@latest init example
 ```
 
@@ -53,7 +52,16 @@ Now, build the default Phat Contract script with this command:
 ```bash
 npx @phala/fn build
 ```
-To simulate the expected result locally, run the Phat Contract script now with this command:
+To simulate the expected result locally, run the Phat Contract script now with the `npx @phala/fn run` command to test the expected output when passing an encoded hexstring and the secrets into the main function of the Phat Contract. This is helpful to test locally quick to understand the functionality of your compiled Phat Contract.
+> Go to https://playground.ethers.org to decode and encode the hexstring you want to pass into your Phat Contract main function.
+> In this example, the hexstring `0x0000000000000000000000000000000000000000000000000000000000000001000000000000000000000000de1683287529b9b4c3132af8aad210644b259cfd` represents types uint id and address target 
+> Here is what you will enter in the playground:
+> - `utils.defaultAbiCoder.decode(['uint id', 'address target'], '0x0000000000000000000000000000000000000000000000000000000000000001000000000000000000000000de1683287529b9b4c3132af8aad210644b259cfd')`
+> - `[ BigNumber { value: "1" }, "0xdE1683287529B9B4C3132af8AaD210644B259CfD", id: BigNumber { value: "1" }, target: "0xdE1683287529B9B4C3132af8AaD210644B259CfD" ]`
+> You can easily validate this by encoding the types and data with the utils.defaultAbiCoder.encode() function like below.
+> - `utils.defaultAbiCoder.encode(['uint id', 'address target'], [1, "0xdE1683287529B9B4C3132af8AaD210644B259CfD"])`
+> - `"0x0000000000000000000000000000000000000000000000000000000000000001000000000000000000000000de1683287529b9b4c3132af8aad210644b259cfd"`
+
 ```bash
 npx @phala/fn run dist/index.js -a 0x0000000000000000000000000000000000000000000000000000000000000001000000000000000000000000de1683287529b9b4c3132af8aad210644b259cfd '{"apiUrl": "https://gateway.thegraph.com/api/", "apiKey": "cd22a01e5b7f9828cddcb52caf03ee79"}'
 ```
